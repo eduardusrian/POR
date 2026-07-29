@@ -70,7 +70,6 @@
         .admin-indicator.show {
             display: inline-flex;
         }
-        /* NAVIGASI */
         .nav-tabs {
             display: flex;
             flex-wrap: wrap;
@@ -112,7 +111,6 @@
             color: white;
             box-shadow: 0 4px 10px rgba(11, 42, 74, 0.25);
         }
-        /* Admin tab - hidden by default */
         .nav-tab.admin-tab {
             display: none;
         }
@@ -135,11 +133,12 @@
         .tab-content.active {
             display: block;
         }
+        /* Hanya tampilkan admin content jika dia active */
+        .tab-content.admin-content.active {
+            display: block;
+        }
         .tab-content.admin-content {
             display: none;
-        }
-        .tab-content.admin-content.show {
-            display: block;
         }
         @keyframes fadeUp {
             0% {
@@ -151,7 +150,6 @@
                 transform: translateY(0);
             }
         }
-        /* Secret area - triple click */
         .secret-area {
             position: fixed;
             bottom: 20px;
@@ -169,7 +167,6 @@
         .secret-area:focus {
             outline: none;
         }
-        /* Admin toggle button */
         .admin-toggle {
             position: fixed;
             bottom: 20px;
@@ -200,7 +197,6 @@
         .admin-toggle.active:hover {
             background: #1a4b6e;
         }
-        /* CARD & FORM */
         .card {
             background: white;
             border-radius: 24px;
@@ -481,7 +477,6 @@
         .admin-login-modal .modal-box .error-msg.show {
             display: block;
         }
-        /* DASHBOARD CARDS */
         .result-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -706,13 +701,9 @@
             </div>
         </div>
 
-        <!-- SECRET AREA - Triple click untuk login admin -->
         <button class="secret-area" id="secretArea" title=""></button>
-
-        <!-- Admin Toggle Button (visible after login) -->
         <button class="admin-toggle" id="adminToggle"><i class="fas fa-user-shield"></i></button>
 
-        <!-- NAVIGASI -->
         <div class="nav-tabs" id="navTabs">
             <button class="nav-tab active" data-tab="tabDashboard"><i class="fas fa-chart-pie"></i> Dashboard</button>
             <button class="nav-tab admin-tab" data-tab="tabManagement"><i class="fas fa-sliders-h"></i> Management <span class="admin-badge">ADMIN</span></button>
@@ -961,7 +952,7 @@
                     renderAll();
                     return;
                 }
-                const stored = localStorage.getItem('por_full_data_v13');
+                const stored = localStorage.getItem('por_full_data_v19');
                 if (stored) {
                     try {
                         const parsed = JSON.parse(stored);
@@ -1037,7 +1028,7 @@
 
             function saveData() {
                 if (!storageAvailable) return;
-                localStorage.setItem('por_full_data_v13', JSON.stringify({ sports, depts, rounds, locations, matches }));
+                localStorage.setItem('por_full_data_v19', JSON.stringify({ sports, depts, rounds, locations, matches }));
             }
 
             // ========== TOAST ==========
@@ -1079,31 +1070,28 @@
             function toggleAdminMode(enable) {
                 isAdmin = enable;
                 const adminTabs = document.querySelectorAll('.admin-tab');
-                const adminContents = document.querySelectorAll('.admin-content');
                 const adminToggle = document.getElementById('adminToggle');
                 const adminIndicator = document.getElementById('adminIndicator');
                 const navTabs = document.getElementById('navTabs');
 
                 if (enable) {
-                    // Show admin tabs
                     adminTabs.forEach(el => el.classList.add('show'));
-                    // Show admin contents
-                    adminContents.forEach(el => el.classList.add('show'));
                     adminToggle.style.display = 'flex';
                     adminToggle.classList.add('active');
                     adminIndicator.classList.add('show');
                     navTabs.classList.add('admin-mode');
+                    
+                    // Jika admin login dan tab saat ini adalah dashboard, tetap di dashboard
+                    // Tapi admin content hanya muncul jika tabnya di-klik
                     showToast('🔓 Mode Admin aktif');
                 } else {
-                    // Hide admin tabs
                     adminTabs.forEach(el => el.classList.remove('show'));
-                    // Hide admin contents
-                    adminContents.forEach(el => el.classList.remove('show'));
                     adminToggle.style.display = 'none';
                     adminToggle.classList.remove('active');
                     adminIndicator.classList.remove('show');
                     navTabs.classList.remove('admin-mode');
-                    // Kembali ke dashboard
+                    
+                    // Kembali ke dashboard dan reset semua tab
                     document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
                     document.querySelector('[data-tab="tabDashboard"]').classList.add('active');
                     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -1112,7 +1100,6 @@
                 }
             }
 
-            // Secret area - triple click
             document.getElementById('secretArea').addEventListener('click', function() {
                 clickCount++;
                 if (clickCount === 1) {
@@ -1127,7 +1114,6 @@
                 }
             });
 
-            // Admin login
             document.getElementById('btnAdminLogin').addEventListener('click', function() {
                 const password = document.getElementById('adminPassword').value;
                 if (password === ADMIN_PASSWORD) {
@@ -1152,7 +1138,6 @@
                 document.getElementById('adminPassword').value = '';
             });
 
-            // Admin toggle button - klik untuk nonaktifkan mode admin
             document.getElementById('adminToggle').addEventListener('click', function() {
                 if (isAdmin) {
                     toggleAdminMode(false);
@@ -1525,15 +1510,22 @@
             // ========== NAVIGASI ==========
             document.querySelectorAll('.nav-tab').forEach(tab => {
                 tab.addEventListener('click', function() {
-                    // Cek apakah tab adalah admin tab dan belum login
+                    // Cek apakah ini admin tab dan admin belum login
                     if (this.classList.contains('admin-tab') && !this.classList.contains('show')) {
                         showToast('⚠️ Anda harus login sebagai admin terlebih dahulu!');
                         return;
                     }
+                    
+                    // Hapus active dari semua tab
                     document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
                     this.classList.add('active');
+                    
+                    // Hapus active dari semua content
                     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                    document.getElementById(this.dataset.tab).classList.add('active');
+                    
+                    // Tampilkan content yang dipilih
+                    const targetId = this.dataset.tab;
+                    document.getElementById(targetId).classList.add('active');
                 });
             });
 
