@@ -52,7 +52,25 @@
             border-radius: 40px;
             font-size: 0.85rem;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
+        .admin-indicator {
+            display: none;
+            background: #ffc857;
+            color: #0b2a4a;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            align-items: center;
+            gap: 4px;
+        }
+        .admin-indicator.show {
+            display: inline-flex;
+        }
+        /* NAVIGASI */
         .nav-tabs {
             display: flex;
             flex-wrap: wrap;
@@ -63,6 +81,11 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
             margin-bottom: 28px;
             border: 1px solid #e2eaf2;
+            transition: 0.3s;
+        }
+        .nav-tabs.admin-mode {
+            border-color: #0b2a4a;
+            box-shadow: 0 4px 20px rgba(11, 42, 74, 0.1);
         }
         .nav-tab {
             padding: 10px 24px;
@@ -89,11 +112,33 @@
             color: white;
             box-shadow: 0 4px 10px rgba(11, 42, 74, 0.25);
         }
+        /* Admin tab - hidden by default */
+        .nav-tab.admin-tab {
+            display: none;
+        }
+        .nav-tab.admin-tab.show {
+            display: inline-flex;
+        }
+        .nav-tab .admin-badge {
+            font-size: 0.6rem;
+            background: #ffc857;
+            color: #0b2a4a;
+            padding: 1px 8px;
+            border-radius: 30px;
+            font-weight: 700;
+            margin-left: 4px;
+        }
         .tab-content {
             display: none;
             animation: fadeUp 0.25s ease;
         }
         .tab-content.active {
+            display: block;
+        }
+        .tab-content.admin-content {
+            display: none;
+        }
+        .tab-content.admin-content.show {
             display: block;
         }
         @keyframes fadeUp {
@@ -106,6 +151,56 @@
                 transform: translateY(0);
             }
         }
+        /* Secret area - triple click */
+        .secret-area {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 99;
+            background: transparent;
+            border: none;
+            color: transparent;
+            user-select: none;
+        }
+        .secret-area:focus {
+            outline: none;
+        }
+        /* Admin toggle button */
+        .admin-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(11, 42, 74, 0.08);
+            border: 1px solid rgba(11, 42, 74, 0.1);
+            color: rgba(11, 42, 74, 0.2);
+            cursor: pointer;
+            transition: 0.3s;
+            z-index: 100;
+            font-size: 1.1rem;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .admin-toggle:hover {
+            background: rgba(11, 42, 74, 0.15);
+            color: rgba(11, 42, 74, 0.4);
+        }
+        .admin-toggle.active {
+            background: #0b2a4a;
+            color: white;
+            border-color: #0b2a4a;
+        }
+        .admin-toggle.active:hover {
+            background: #1a4b6e;
+        }
+        /* CARD & FORM */
         .card {
             background: white;
             border-radius: 24px;
@@ -126,15 +221,6 @@
         .card-title i {
             color: #1e6f9f;
             width: 28px;
-        }
-        .card-title .badge-count {
-            background: #eef3f8;
-            padding: 2px 12px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: #3a5777;
-            margin-left: 8px;
         }
         .grid-2col {
             display: grid;
@@ -325,7 +411,7 @@
         }
         .toast {
             position: fixed;
-            bottom: 30px;
+            bottom: 80px;
             left: 50%;
             transform: translateX(-50%);
             background: #0b2a4a;
@@ -376,16 +462,26 @@
         .modal-box .btn {
             margin: 0 6px;
         }
-        .vs-badge {
-            background: #eef3f8;
-            padding: 2px 12px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 0.75rem;
-            color: #1e6f9f;
-            margin: 0 4px;
+        .admin-login-modal .modal-box {
+            max-width: 350px;
         }
-        /* Dashboard result card style */
+        .admin-login-modal .modal-box input {
+            margin-bottom: 12px;
+        }
+        .admin-login-modal .modal-box .btn {
+            width: 100%;
+            justify-content: center;
+        }
+        .admin-login-modal .modal-box .error-msg {
+            color: #dc3545;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            display: none;
+        }
+        .admin-login-modal .modal-box .error-msg.show {
+            display: block;
+        }
+        /* DASHBOARD CARDS */
         .result-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -501,13 +597,6 @@
         .result-card .match-schedule {
             color: #6f8ba8;
         }
-        .result-card .match-location {
-            color: #6f8ba8;
-            font-size: 0.75rem;
-        }
-        .result-card .match-location i {
-            margin-right: 3px;
-        }
         .result-card .status-label {
             font-size: 0.7rem;
             padding: 2px 12px;
@@ -594,37 +683,15 @@
             color: #8ba0b9;
             margin: 0 8px;
         }
-        .location-chip {
-            background: #e8f0fe;
-            color: #1e6f9f;
-            padding: 2px 12px;
-            border-radius: 30px;
-            font-size: 0.7rem;
-            display: inline-block;
-            margin-top: 4px;
-        }
-        .round-badge {
-            background: #cce5ff;
-            color: #004085;
-            padding: 2px 12px;
-            border-radius: 30px;
-            font-size: 0.7rem;
-            display: inline-block;
-        }
-        /* Form order - left column */
-        .form-order {
-            display: flex;
-            flex-direction: column;
-        }
         .form-order .form-group {
             order: 0;
         }
-        .form-order .form-group:nth-child(1) { order: 1; } /* Jadwal */
-        .form-order .form-group:nth-child(2) { order: 2; } /* Cabang Olahraga */
-        .form-order .form-group:nth-child(3) { order: 3; } /* Babak */
-        .form-order .form-group:nth-child(4) { order: 4; } /* Lokasi */
-        .form-order .form-group:nth-child(5) { order: 5; } /* Tim Tuan Rumah */
-        .form-order .form-group:nth-child(6) { order: 6; } /* Tim Tamu */
+        .form-order .form-group:nth-child(1) { order: 1; }
+        .form-order .form-group:nth-child(2) { order: 2; }
+        .form-order .form-group:nth-child(3) { order: 3; }
+        .form-order .form-group:nth-child(4) { order: 4; }
+        .form-order .form-group:nth-child(5) { order: 5; }
+        .form-order .form-group:nth-child(6) { order: 6; }
         .form-order .btn { order: 7; }
     </style>
 </head>
@@ -633,13 +700,23 @@
 
         <div class="header">
             <h1><i class="fas fa-trophy"></i> POR Digital</h1>
-            <div class="badge"><i class="far fa-calendar-alt"></i> Pekan Olahraga 2026</div>
+            <div class="badge">
+                <i class="far fa-calendar-alt"></i> Pekan Olahraga 2026
+                <span class="admin-indicator" id="adminIndicator"><i class="fas fa-shield-alt"></i> ADMIN</span>
+            </div>
         </div>
 
-        <div class="nav-tabs">
+        <!-- SECRET AREA - Triple click untuk login admin -->
+        <button class="secret-area" id="secretArea" title=""></button>
+
+        <!-- Admin Toggle Button (visible after login) -->
+        <button class="admin-toggle" id="adminToggle"><i class="fas fa-user-shield"></i></button>
+
+        <!-- NAVIGASI -->
+        <div class="nav-tabs" id="navTabs">
             <button class="nav-tab active" data-tab="tabDashboard"><i class="fas fa-chart-pie"></i> Dashboard</button>
-            <button class="nav-tab" data-tab="tabManagement"><i class="fas fa-sliders-h"></i> Management</button>
-            <button class="nav-tab" data-tab="tabUpdateResult"><i class="fas fa-pen-fancy"></i> Update Hasil</button>
+            <button class="nav-tab admin-tab" data-tab="tabManagement"><i class="fas fa-sliders-h"></i> Management <span class="admin-badge">ADMIN</span></button>
+            <button class="nav-tab admin-tab" data-tab="tabUpdateResult"><i class="fas fa-pen-fancy"></i> Update Hasil <span class="admin-badge">ADMIN</span></button>
         </div>
 
         <!-- TAB 1: DASHBOARD -->
@@ -668,8 +745,8 @@
             </div>
         </div>
 
-        <!-- TAB 2: MANAGEMENT -->
-        <div id="tabManagement" class="tab-content">
+        <!-- TAB 2: MANAGEMENT (ADMIN) -->
+        <div id="tabManagement" class="tab-content admin-content">
             <div class="card">
                 <div class="card-title"><i class="fas fa-plus-circle"></i> Tambah Pertandingan</div>
                 <div class="grid-2col">
@@ -777,8 +854,8 @@
             </div>
         </div>
 
-        <!-- TAB 3: UPDATE HASIL -->
-        <div id="tabUpdateResult" class="tab-content">
+        <!-- TAB 3: UPDATE HASIL (ADMIN) -->
+        <div id="tabUpdateResult" class="tab-content admin-content">
             <div class="card">
                 <div class="card-title"><i class="fas fa-check-double"></i> Update Hasil Pertandingan</div>
                 <div style="max-width:600px;">
@@ -823,6 +900,18 @@
             </div>
         </div>
 
+        <!-- ADMIN LOGIN MODAL -->
+        <div class="modal-overlay admin-login-modal" id="adminLoginModal">
+            <div class="modal-box">
+                <h3><i class="fas fa-shield-alt"></i> Admin Login</h3>
+                <p style="font-size:0.9rem;color:#6f8ba8;margin-bottom:16px;">Masukkan kode akses admin</p>
+                <input type="password" id="adminPassword" placeholder="Masukkan kode admin" style="text-align:center;">
+                <div class="error-msg" id="loginError">❌ Kode salah! Coba lagi.</div>
+                <button class="btn btn-primary" id="btnAdminLogin"><i class="fas fa-unlock"></i> Login</button>
+                <button class="btn btn-outline btn-sm" style="margin-top:8px;width:100%;" id="btnAdminCancel">Batal</button>
+            </div>
+        </div>
+
         <!-- MODAL -->
         <div class="modal-overlay" id="modalOverlay">
             <div class="modal-box">
@@ -840,6 +929,12 @@
 
     <script>
         (function() {
+            // ========== ADMIN STATE ==========
+            let isAdmin = false;
+            const ADMIN_PASSWORD = 'admin123';
+            let clickCount = 0;
+            let clickTimer = null;
+
             // ========== DATA ==========
             let sports = ['Futsal', 'Badminton', 'Basket', 'Voli'];
             let depts = ['HRD', 'IT', 'Marketing', 'Finance'];
@@ -977,6 +1072,90 @@
                 if (e.target === this) {
                     this.classList.remove('active');
                     pendingDelete = null;
+                }
+            });
+
+            // ========== ADMIN LOGIN ==========
+            function toggleAdminMode(enable) {
+                isAdmin = enable;
+                const adminTabs = document.querySelectorAll('.admin-tab');
+                const adminContents = document.querySelectorAll('.admin-content');
+                const adminToggle = document.getElementById('adminToggle');
+                const adminIndicator = document.getElementById('adminIndicator');
+                const navTabs = document.getElementById('navTabs');
+
+                if (enable) {
+                    // Show admin tabs
+                    adminTabs.forEach(el => el.classList.add('show'));
+                    // Show admin contents
+                    adminContents.forEach(el => el.classList.add('show'));
+                    adminToggle.style.display = 'flex';
+                    adminToggle.classList.add('active');
+                    adminIndicator.classList.add('show');
+                    navTabs.classList.add('admin-mode');
+                    showToast('🔓 Mode Admin aktif');
+                } else {
+                    // Hide admin tabs
+                    adminTabs.forEach(el => el.classList.remove('show'));
+                    // Hide admin contents
+                    adminContents.forEach(el => el.classList.remove('show'));
+                    adminToggle.style.display = 'none';
+                    adminToggle.classList.remove('active');
+                    adminIndicator.classList.remove('show');
+                    navTabs.classList.remove('admin-mode');
+                    // Kembali ke dashboard
+                    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelector('[data-tab="tabDashboard"]').classList.add('active');
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    document.getElementById('tabDashboard').classList.add('active');
+                    showToast('🔒 Mode Admin dinonaktifkan');
+                }
+            }
+
+            // Secret area - triple click
+            document.getElementById('secretArea').addEventListener('click', function() {
+                clickCount++;
+                if (clickCount === 1) {
+                    clickTimer = setTimeout(() => { clickCount = 0; }, 800);
+                }
+                if (clickCount >= 3) {
+                    clearTimeout(clickTimer);
+                    clickCount = 0;
+                    document.getElementById('adminLoginModal').classList.add('active');
+                    document.getElementById('adminPassword').value = '';
+                    document.getElementById('loginError').classList.remove('show');
+                }
+            });
+
+            // Admin login
+            document.getElementById('btnAdminLogin').addEventListener('click', function() {
+                const password = document.getElementById('adminPassword').value;
+                if (password === ADMIN_PASSWORD) {
+                    document.getElementById('adminLoginModal').classList.remove('active');
+                    toggleAdminMode(true);
+                } else {
+                    document.getElementById('loginError').classList.add('show');
+                    document.getElementById('adminPassword').value = '';
+                    document.getElementById('adminPassword').focus();
+                }
+            });
+
+            document.getElementById('adminPassword').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('btnAdminLogin').click();
+                }
+            });
+
+            document.getElementById('btnAdminCancel').addEventListener('click', function() {
+                document.getElementById('adminLoginModal').classList.remove('active');
+                document.getElementById('loginError').classList.remove('show');
+                document.getElementById('adminPassword').value = '';
+            });
+
+            // Admin toggle button - klik untuk nonaktifkan mode admin
+            document.getElementById('adminToggle').addEventListener('click', function() {
+                if (isAdmin) {
+                    toggleAdminMode(false);
                 }
             });
 
@@ -1346,6 +1525,11 @@
             // ========== NAVIGASI ==========
             document.querySelectorAll('.nav-tab').forEach(tab => {
                 tab.addEventListener('click', function() {
+                    // Cek apakah tab adalah admin tab dan belum login
+                    if (this.classList.contains('admin-tab') && !this.classList.contains('show')) {
+                        showToast('⚠️ Anda harus login sebagai admin terlebih dahulu!');
+                        return;
+                    }
                     document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
                     this.classList.add('active');
                     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
