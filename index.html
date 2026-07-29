@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚽ POR Digital · Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+        body {
+            background: #f0f4fa;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .app {
+            max-width: 1200px;
+            width: 100%;
+        }
+        .header {
+            background: linear-gradient(145deg, #0b2a4a, #1a4b6e);
+            color: white;
+            padding: 18px 28px;
+            border-radius: 30px;
+            box-shadow: 0 10px 28px rgba(0, 20, 40, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .header h1 {
+            font-weight: 600;
+            font-size: 1.7rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header h1 i {
+            color: #ffc857;
+        }
+        .header .badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 60px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            margin-bottom: 28px;
+            border: 1px solid #e2eaf2;
+        }
+        .nav-tab {
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: #3a5777;
+            transition: 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-tab i {
+            font-size: 1rem;
+        }
+        .nav-tab:hover {
+            background: #e9f0f7;
+        }
+        .nav-tab.active {
+            background: #0b2a4a;
+            color: white;
+            box-shadow: 0 4px 10px rgba(11, 42, 74, 0.25);
+        }
+        .tab-content {
+            display: none;
+            animation: fadeUp 0.25s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeUp {
+            0% {
+                opacity: 0.3;
+                transform: translateY(6px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 22px 26px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.03), 0 2px 8px rgba(0, 20, 40, 0.05);
+            margin-bottom: 24px;
+            border: 1px solid #eaf0f6;
+        }
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #0b2a4a;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .card-title i {
+            color: #1e6f9f;
+            width: 28px;
+        }
+        .card-title .badge-count {
+            background: #eef3f8;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #3a5777;
+            margin-left: 8px;
+        }
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        @media (max-width: 700px) {
+            .grid-2col {
+                grid-template-columns: 1fr;
+            }
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        label {
+            display: block;
+            font-weight: 500;
+            color: #1f3a57;
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+        }
+        input,
+        select {
+            width: 100%;
+            padding: 11px 16px;
+            border: 1.5px solid #dce5ed;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            background: #fafcff;
+            transition: 0.2s;
+        }
+        input:focus,
+        select:focus {
+            border-color: #1e6f9f;
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(30, 111, 159, 0.08);
+        }
+        .btn {
+            border: none;
+            padding: 11px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary {
+            background: #1e6f9f;
+            color: white;
+            box-shadow: 0 4px 10px rgba(30, 111, 159, 0.25);
+        }
+        .btn-primary:hover {
+            background: #155a83;
+            transform: scale(0.97);
+        }
+        .btn-success {
+            background: #1f9d6a;
+            color: white;
+            box-shadow: 0 4px 10px rgba(31, 157, 106, 0.2);
+        }
+        .btn-success:hover {
+            background: #168357;
+        }
+        .btn-danger {
+            background: #cd5c5c;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #b34a4a;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid #d0dce8;
+        }
+        .btn-outline:hover {
+            background: #e9f0f7;
+        }
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 0.8rem;
+        }
+        .flex-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin-top: 4px;
+        }
+        .mt-2 {
+            margin-top: 14px;
+        }
+        .mb-1 {
+            margin-bottom: 6px;
+        }
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: 16px;
+            background: #f9fcff;
+            padding: 2px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.93rem;
+        }
+        th {
+            text-align: left;
+            padding: 14px 12px 10px 12px;
+            color: #2f4a6a;
+            font-weight: 600;
+            border-bottom: 2px solid #dce5ed;
+        }
+        td {
+            padding: 12px 12px;
+            border-bottom: 1px solid #eef3f8;
+            vertical-align: middle;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .status-badge {
+            background: #e5f0fa;
+            padding: 3px 14px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #1e6f9f;
+            display: inline-block;
+        }
+        .status-badge.selesai {
+            background: #dcfce8;
+            color: #0f6a44;
+        }
+        .status-badge.dijadwalkan {
+            background: #fff3d6;
+            color: #a7660e;
+        }
+        .hapus-btn {
+            background: none;
+            border: none;
+            color: #b0c4d8;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.1s;
+            padding: 0 6px;
+        }
+        .hapus-btn:hover {
+            color: #cd5c5c;
+            transform: scale(1.1);
+        }
+        .empty-state {
+            padding: 30px 10px;
+            text-align: center;
+            color: #8ba0b9;
+            font-weight: 400;
+        }
+        .empty-state i {
+            font-size: 2rem;
+            opacity: 0.4;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .stat-hint {
+            background: #eef6fc;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            color: #1e5b7c;
+        }
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #eef3f8;
+        }
+        .list-item:last-child {
+            border-bottom: none;
+        }
+        .list-item .item-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0b2a4a;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: 500;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+            opacity: 0;
+            transition: 0.3s;
+            pointer-events: none;
+        }
+        .toast.show {
+            opacity: 1;
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-box {
+            background: white;
+            padding: 30px 40px;
+            border-radius: 24px;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        .modal-box h3 {
+            margin-bottom: 12px;
+            color: #0b2a4a;
+        }
+        .modal-box p {
+            margin-bottom: 20px;
+            color: #3a5777;
+        }
+        .modal-box .btn {
+            margin: 0 6px;
+        }
+        .vs-badge {
+            background: #eef3f8;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: #1e6f9f;
+            margin: 0 4px;
+        }
+        /* Dashboard result card style */
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 8px;
+        }
+        .result-card {
+            background: #f9fcff;
+            border-radius: 16px;
+            padding: 16px 18px;
+            border: 1px solid #eaf0f6;
+            transition: 0.2s;
+        }
+        .result-card:hover {
+            border-color: #c0d4e8;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+        .result-card .sport-name {
+            font-weight: 700;
+            color: #0b2a4a;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #eef3f8;
+            padding-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .result-card .sport-name .location-tag {
+            font-weight: 400;
+            font-size: 0.7rem;
+            background: #eef3f8;
+            padding: 2px 10px;
+            border-radius: 30px;
+            color: #3a5777;
+        }
+        .result-card .sport-name .round-tag {
+            font-weight: 600;
+            font-size: 0.7rem;
+            background: #d4edda;
+            padding: 2px 10px;
+            border-radius: 30px;
+            color: #155724;
+        }
+        .result-card .match-teams {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .result-card .team-box {
+            flex: 1;
+            text-align: center;
+            padding: 8px 6px;
+            border-radius: 10px;
+            background: #f4f7fa;
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .result-card .team-box.winner {
+            background: #d4edda;
+            border: 2px solid #28a745;
+        }
+        .result-card .team-box.loser {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+        }
+        .result-card .team-box.draw {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+        }
+        .result-card .team-box .team-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #1f3a57;
+            margin-bottom: 4px;
+        }
+        .result-card .team-box .team-score {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #0b2a4a;
+        }
+        .result-card .team-box .team-score.empty {
+            color: #8ba0b9;
+            font-weight: 400;
+            font-size: 0.85rem;
+        }
+        .result-card .vs-center {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            color: #8ba0b9;
+            font-size: 0.85rem;
+            padding: 0 4px;
+            flex-shrink: 0;
+        }
+        .result-card .match-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            font-size: 0.78rem;
+            color: #3a5777;
+            border-top: 1px solid #eef3f8;
+            padding-top: 8px;
+        }
+        .result-card .match-schedule {
+            color: #6f8ba8;
+        }
+        .result-card .match-location {
+            color: #6f8ba8;
+            font-size: 0.75rem;
+        }
+        .result-card .match-location i {
+            margin-right: 3px;
+        }
+        .result-card .status-label {
+            font-size: 0.7rem;
+            padding: 2px 12px;
+            border-radius: 30px;
+            background: #eef3f8;
+            color: #3a5777;
+        }
+        .result-card .status-label.selesai {
+            background: #d4edda;
+            color: #155724;
+        }
+        .result-card .status-label.dijadwalkan {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .section-divider {
+            margin: 20px 0 12px 0;
+            padding: 8px 0;
+            border-top: 2px solid #eef3f8;
+        }
+        .section-divider:first-of-type {
+            border-top: none;
+            margin-top: 0;
+        }
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #0b2a4a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .section-title .count {
+            background: #eef3f8;
+            padding: 0 12px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #3a5777;
+        }
+        .score-input-group {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin: 8px 0;
+            flex-wrap: wrap;
+        }
+        .score-input-group .score-field {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            flex: 1;
+        }
+        .score-input-group .score-field label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #1f3a57;
+            margin-bottom: 0;
+        }
+        .score-input-group .score-field input {
+            width: 100px;
+            text-align: center;
+            padding: 8px;
+        }
+        .score-input-group .vs-text {
+            font-weight: 700;
+            color: #8ba0b9;
+            font-size: 1.1rem;
+            padding: 0 4px;
+        }
+        .match-preview {
+            background: #f4f7fa;
+            padding: 10px 16px;
+            border-radius: 12px;
+            margin: 8px 0 16px 0;
+            text-align: center;
+            font-weight: 600;
+            color: #0b2a4a;
+            border: 1px solid #eaf0f6;
+        }
+        .match-preview .vs-highlight {
+            color: #8ba0b9;
+            margin: 0 8px;
+        }
+        .location-chip {
+            background: #e8f0fe;
+            color: #1e6f9f;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            display: inline-block;
+            margin-top: 4px;
+        }
+        .round-badge {
+            background: #cce5ff;
+            color: #004085;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            display: inline-block;
+        }
+        /* Form order - left column */
+        .form-order {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-order .form-group {
+            order: 0;
+        }
+        .form-order .form-group:nth-child(1) { order: 1; } /* Jadwal */
+        .form-order .form-group:nth-child(2) { order: 2; } /* Cabang Olahraga */
+        .form-order .form-group:nth-child(3) { order: 3; } /* Babak */
+        .form-order .form-group:nth-child(4) { order: 4; } /* Lokasi */
+        .form-order .form-group:nth-child(5) { order: 5; } /* Tim Tuan Rumah */
+        .form-order .form-group:nth-child(6) { order: 6; } /* Tim Tamu */
+        .form-order .btn { order: 7; }
+    </style>
+</head>
+<body>
+    <div class="app" id="app">
+
+        <div class="header">
+            <h1><i class="fas fa-trophy"></i> POR Digital</h1>
+            <div class="badge"><i class="far fa-calendar-alt"></i> Pekan Olahraga 2026</div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="tabDashboard"><i class="fas fa-chart-pie"></i> Dashboard</button>
+            <button class="nav-tab" data-tab="tabManagement"><i class="fas fa-sliders-h"></i> Management</button>
+            <button class="nav-tab" data-tab="tabUpdateResult"><i class="fas fa-pen-fancy"></i> Update Hasil</button>
+        </div>
+
+        <!-- TAB 1: DASHBOARD -->
+        <div id="tabDashboard" class="tab-content active">
+            <div class="card">
+                <div class="card-title" style="justify-content: space-between; flex-wrap: wrap;">
+                    <span><i class="fas fa-chart-simple"></i> Dashboard Pertandingan</span>
+                    <span class="stat-hint" id="totalMatchDash">Total: 0</span>
+                </div>
+                
+                <div class="section-divider">
+                    <div class="section-title">
+                        <i class="fas fa-clock" style="color:#ffc857;"></i> Jadwal Pertandingan
+                        <span class="count" id="countScheduled">0</span>
+                    </div>
+                    <div id="scheduledGrid" class="result-grid"></div>
+                </div>
+
+                <div class="section-divider">
+                    <div class="section-title">
+                        <i class="fas fa-flag-checkered" style="color:#28a745;"></i> Hasil Pertandingan
+                        <span class="count" id="countFinished">0</span>
+                    </div>
+                    <div id="finishedGrid" class="result-grid"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: MANAGEMENT -->
+        <div id="tabManagement" class="tab-content">
+            <div class="card">
+                <div class="card-title"><i class="fas fa-plus-circle"></i> Tambah Pertandingan</div>
+                <div class="grid-2col">
+                    <div class="form-order">
+                        <div class="form-group">
+                            <label><i class="far fa-calendar"></i> Jadwal</label>
+                            <input type="datetime-local" id="inputSchedule" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-futbol"></i> Cabang Olahraga</label>
+                            <select id="inputSport" required>
+                                <option value="">— pilih cabang —</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-trophy"></i> Babak</label>
+                            <select id="inputRound" required>
+                                <option value="">— pilih babak —</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-map-pin"></i> Lokasi</label>
+                            <select id="inputLocation" required>
+                                <option value="">— pilih lokasi —</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-users"></i> Tim Tuan Rumah</label>
+                            <select id="inputDeptHome" required>
+                                <option value="">— pilih departemen —</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-users"></i> Tim Tamu</label>
+                            <select id="inputDeptAway" required>
+                                <option value="">— pilih departemen —</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" id="btnTambahMatch"><i class="fas fa-save"></i> Simpan Pertandingan</button>
+                    </div>
+                    <div>
+                        <div class="form-group">
+                            <label><i class="fas fa-dumbbell"></i> Cabang Olahraga</label>
+                            <div class="flex-row mb-1">
+                                <input type="text" id="inputNewSport" placeholder="Nama cabang olahraga" style="flex:1;">
+                                <button class="btn btn-primary btn-sm" id="btnAddSport"><i class="fas fa-plus"></i> Tambah</button>
+                            </div>
+                            <div id="sportList" style="margin-top:12px;"></div>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-building"></i> Departemen</label>
+                            <div class="flex-row mb-1">
+                                <input type="text" id="inputNewDept" placeholder="Nama departemen / tim" style="flex:1;">
+                                <button class="btn btn-primary btn-sm" id="btnAddDept"><i class="fas fa-plus"></i> Tambah</button>
+                            </div>
+                            <div id="deptList" style="margin-top:12px;"></div>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-trophy"></i> Babak</label>
+                            <div class="flex-row mb-1">
+                                <input type="text" id="inputNewRound" placeholder="Nama babak (contoh: Semifinal, Final)" style="flex:1;">
+                                <button class="btn btn-primary btn-sm" id="btnAddRound"><i class="fas fa-plus"></i> Tambah</button>
+                            </div>
+                            <div id="roundList" style="margin-top:12px;"></div>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-map-pin"></i> Lokasi</label>
+                            <div class="flex-row mb-1">
+                                <input type="text" id="inputNewLocation" placeholder="Nama lokasi (contoh: Lapangan A, GOR)" style="flex:1;">
+                                <button class="btn btn-primary btn-sm" id="btnAddLocation"><i class="fas fa-plus"></i> Tambah</button>
+                            </div>
+                            <div id="locationList" style="margin-top:12px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><i class="fas fa-clock"></i> Daftar Jadwal & Pertandingan</div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Olahraga</th>
+                                <th>Pertandingan</th>
+                                <th>Babak</th>
+                                <th>Lokasi</th>
+                                <th>Jadwal</th>
+                                <th>Hasil</th>
+                                <th>Status</th>
+                                <th style="text-align:center;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="managementTableBody">
+                            <tr>
+                                <td colspan="8" class="empty-state"><i class="fas fa-inbox"></i> Belum ada pertandingan.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="margin-top:14px;">
+                    <button class="btn btn-outline btn-sm" id="resetAllData"><i class="fas fa-trash-alt"></i> Reset semua data</button>
+                    <span style="font-size:0.8rem; color:#6f8ba8; margin-left:10px;">(tersimpan di lokal)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: UPDATE HASIL -->
+        <div id="tabUpdateResult" class="tab-content">
+            <div class="card">
+                <div class="card-title"><i class="fas fa-check-double"></i> Update Hasil Pertandingan</div>
+                <div style="max-width:600px;">
+                    <div class="form-group">
+                        <label><i class="fas fa-tag"></i> Pilih Pertandingan</label>
+                        <select id="selectMatchForResult" required>
+                            <option value="">— pilih pertandingan —</option>
+                        </select>
+                    </div>
+                    
+                    <div id="matchPreview" class="match-preview" style="display:none;">
+                        <span id="previewHome">—</span>
+                        <span class="vs-highlight">VS</span>
+                        <span id="previewAway">—</span>
+                        <span style="display:block;font-size:0.8rem;color:#6f8ba8;margin-top:4px;">
+                            <i class="fas fa-trophy"></i> <span id="previewRound">—</span> &nbsp;|&nbsp; <i class="fas fa-map-pin"></i> <span id="previewLocation">—</span>
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-flag-checkered"></i> Masukkan Skor</label>
+                        <div class="score-input-group">
+                            <div class="score-field">
+                                <label id="labelHome">Home</label>
+                                <input type="number" id="inputScoreHome" placeholder="Skor" min="0">
+                            </div>
+                            <span class="vs-text">VS</span>
+                            <div class="score-field">
+                                <label id="labelAway">Away</label>
+                                <input type="number" id="inputScoreAway" placeholder="Skor" min="0">
+                            </div>
+                        </div>
+                        <div style="font-size:0.8rem;color:#6f8ba8;margin-top:4px;">
+                            <i class="fas fa-info-circle"></i> Kosongkan jika belum selesai
+                        </div>
+                    </div>
+                    <div class="flex-row">
+                        <button class="btn btn-success" id="btnUpdateHasil"><i class="fas fa-pen-fancy"></i> Update Hasil</button>
+                        <button class="btn btn-outline btn-sm" id="btnResetResult"><i class="fas fa-undo"></i> Reset Hasil</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL -->
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal-box">
+                <h3 id="modalTitle">Konfirmasi</h3>
+                <p id="modalMessage">Apakah Anda yakin?</p>
+                <div>
+                    <button class="btn btn-outline btn-sm" id="modalCancel">Batal</button>
+                    <button class="btn btn-danger btn-sm" id="modalConfirm">Ya, Hapus</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="toast" class="toast"></div>
+    </div>
+
+    <script>
+        (function() {
+            // ========== DATA ==========
+            let sports = ['Futsal', 'Badminton', 'Basket', 'Voli'];
+            let depts = ['HRD', 'IT', 'Marketing', 'Finance'];
+            let rounds = ['Penyisihan', 'Perempat Final', 'Semifinal', 'Final'];
+            let locations = ['Lapangan A', 'Lapangan B', 'GOR Indoor', 'Lapangan Basket'];
+            let matches = [];
+            let pendingDelete = null;
+
+            // ========== STORAGE ==========
+            function isLocalStorageAvailable() {
+                try {
+                    localStorage.setItem('_test', '1');
+                    localStorage.removeItem('_test');
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            }
+            const storageAvailable = isLocalStorageAvailable();
+
+            function loadData() {
+                if (!storageAvailable) {
+                    resetDefault();
+                    renderAll();
+                    return;
+                }
+                const stored = localStorage.getItem('por_full_data_v13');
+                if (stored) {
+                    try {
+                        const parsed = JSON.parse(stored);
+                        sports = parsed.sports || sports;
+                        depts = parsed.depts || depts;
+                        rounds = parsed.rounds || rounds;
+                        locations = parsed.locations || locations;
+                        matches = parsed.matches || [];
+                    } catch (e) { resetDefault(); }
+                } else {
+                    resetDefault();
+                }
+                matches = matches.map(m => ({
+                    ...m,
+                    status: m.status || (m.result && m.result.trim() ? 'selesai' : 'dijadwalkan'),
+                    result: m.result || '',
+                    scoreHome: m.scoreHome || '',
+                    scoreAway: m.scoreAway || '',
+                    sport: m.sport || '',
+                    home: m.home || '',
+                    away: m.away || '',
+                    round: m.round || '',
+                    location: m.location || '',
+                    schedule: m.schedule || ''
+                }));
+                saveData();
+                renderAll();
+            }
+
+            function resetDefault() {
+                sports = ['Futsal', 'Badminton', 'Basket', 'Voli'];
+                depts = ['HRD', 'IT', 'Marketing', 'Finance'];
+                rounds = ['Penyisihan', 'Perempat Final', 'Semifinal', 'Final'];
+                locations = ['Lapangan A', 'Lapangan B', 'GOR Indoor', 'Lapangan Basket'];
+                matches = [{
+                    id: Date.now() - 200000,
+                    sport: 'Futsal',
+                    home: 'IT',
+                    away: 'Marketing',
+                    round: 'Semifinal',
+                    location: 'Lapangan A',
+                    schedule: new Date(Date.now() + 3600000).toISOString().slice(0, 16),
+                    result: '',
+                    scoreHome: '',
+                    scoreAway: '',
+                    status: 'dijadwalkan'
+                }, {
+                    id: Date.now() - 100000,
+                    sport: 'Badminton',
+                    home: 'HRD',
+                    away: 'Finance',
+                    round: 'Final',
+                    location: 'GOR Indoor',
+                    schedule: new Date(Date.now() - 7200000).toISOString().slice(0, 16),
+                    result: '2-1',
+                    scoreHome: '2',
+                    scoreAway: '1',
+                    status: 'selesai'
+                }, {
+                    id: Date.now() - 50000,
+                    sport: 'Basket',
+                    home: 'Marketing',
+                    away: 'IT',
+                    round: 'Perempat Final',
+                    location: 'Lapangan Basket',
+                    schedule: new Date(Date.now() - 3600000).toISOString().slice(0, 16),
+                    result: '85-78',
+                    scoreHome: '85',
+                    scoreAway: '78',
+                    status: 'selesai'
+                }];
+            }
+
+            function saveData() {
+                if (!storageAvailable) return;
+                localStorage.setItem('por_full_data_v13', JSON.stringify({ sports, depts, rounds, locations, matches }));
+            }
+
+            // ========== TOAST ==========
+            function showToast(msg) {
+                const el = document.getElementById('toast');
+                el.textContent = msg;
+                el.classList.add('show');
+                clearTimeout(el._timer);
+                el._timer = setTimeout(() => el.classList.remove('show'), 2500);
+            }
+
+            // ========== MODAL ==========
+            function showModal(title, message, onConfirm) {
+                document.getElementById('modalTitle').textContent = title;
+                document.getElementById('modalMessage').textContent = message;
+                document.getElementById('modalOverlay').classList.add('active');
+                pendingDelete = onConfirm;
+            }
+
+            document.getElementById('modalCancel').addEventListener('click', function() {
+                document.getElementById('modalOverlay').classList.remove('active');
+                pendingDelete = null;
+            });
+            document.getElementById('modalConfirm').addEventListener('click', function() {
+                if (pendingDelete) {
+                    pendingDelete();
+                    pendingDelete = null;
+                }
+                document.getElementById('modalOverlay').classList.remove('active');
+            });
+            document.getElementById('modalOverlay').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                    pendingDelete = null;
+                }
+            });
+
+            // ========== RENDER ==========
+            function renderAll() {
+                renderDashboard();
+                renderManagementTable();
+                renderSelectOptions();
+                renderSportList();
+                renderDeptList();
+                renderRoundList();
+                renderLocationList();
+                updateStats();
+            }
+
+            function getMatchDisplay(m) {
+                return `${m.home || '?'} VS ${m.away || '?'}`;
+            }
+
+            // ========== DASHBOARD ==========
+            function renderDashboard() {
+                const scheduledContainer = document.getElementById('scheduledGrid');
+                const finishedContainer = document.getElementById('finishedGrid');
+                
+                const scheduled = matches.filter(m => m.status === 'dijadwalkan');
+                const finished = matches.filter(m => m.status === 'selesai');
+
+                document.getElementById('countScheduled').textContent = scheduled.length;
+                document.getElementById('countFinished').textContent = finished.length;
+
+                if (!scheduled.length) {
+                    scheduledContainer.innerHTML = `<div class="empty-state" style="grid-column:1/-1;padding:20px;">
+                        <i class="fas fa-calendar-plus"></i> Belum ada jadwal pertandingan.
+                    </div>`;
+                } else {
+                    scheduledContainer.innerHTML = renderMatchCards(scheduled, false);
+                }
+
+                if (!finished.length) {
+                    finishedContainer.innerHTML = `<div class="empty-state" style="grid-column:1/-1;padding:20px;">
+                        <i class="fas fa-inbox"></i> Belum ada hasil pertandingan.
+                    </div>`;
+                } else {
+                    finishedContainer.innerHTML = renderMatchCards(finished, true);
+                }
+            }
+
+            function renderMatchCards(matchesList, isFinished) {
+                let html = '';
+                const sorted = [...matchesList].sort((a, b) => new Date(a.schedule) - new Date(b.schedule));
+                sorted.forEach(m => {
+                    const jadwalDisplay = m.schedule ? new Date(m.schedule).toLocaleString('id-ID', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    }) : '—';
+                    
+                    const statusText = isFinished ? 'Selesai' : '⏳ Dijadwalkan';
+                    const statusClass = isFinished ? 'selesai' : 'dijadwalkan';
+
+                    let homeClass = 'team-box';
+                    let awayClass = 'team-box';
+                    let homeScoreDisplay = m.scoreHome || '';
+                    let awayScoreDisplay = m.scoreAway || '';
+                    const hasScore = homeScoreDisplay !== '' && awayScoreDisplay !== '';
+
+                    if (isFinished && hasScore) {
+                        const h = parseInt(homeScoreDisplay);
+                        const a = parseInt(awayScoreDisplay);
+                        if (h > a) {
+                            homeClass += ' winner';
+                            awayClass += ' loser';
+                        } else if (a > h) {
+                            homeClass += ' loser';
+                            awayClass += ' winner';
+                        } else {
+                            homeClass += ' draw';
+                            awayClass += ' draw';
+                        }
+                    }
+
+                    const homeScoreHtml = hasScore ?
+                        `<span class="team-score">${homeScoreDisplay}</span>` :
+                        `<span class="team-score empty">—</span>`;
+                    const awayScoreHtml = hasScore ?
+                        `<span class="team-score">${awayScoreDisplay}</span>` :
+                        `<span class="team-score empty">—</span>`;
+
+                    const locationDisplay = m.location ? `<span class="location-tag"><i class="fas fa-map-pin"></i> ${m.location}</span>` : '';
+                    const roundDisplay = m.round ? `<span class="round-tag"><i class="fas fa-trophy"></i> ${m.round}</span>` : '';
+
+                    html += `
+                        <div class="result-card">
+                            <div class="sport-name">
+                                <span><i class="fas fa-futbol" style="color:#1e6f9f;margin-right:6px;"></i>${m.sport}</span>
+                                <span>${roundDisplay} ${locationDisplay}</span>
+                            </div>
+                            <div class="match-teams">
+                                <div class="${homeClass}">
+                                    <div class="team-name">${m.home}</div>
+                                    ${homeScoreHtml}
+                                </div>
+                                <div class="vs-center">VS</div>
+                                <div class="${awayClass}">
+                                    <div class="team-name">${m.away}</div>
+                                    ${awayScoreHtml}
+                                </div>
+                            </div>
+                            <div class="match-info">
+                                <span class="match-schedule"><i class="far fa-calendar-alt" style="margin-right:4px;"></i>${jadwalDisplay}</span>
+                                <span class="status-label ${statusClass}">${statusText}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                return html;
+            }
+
+            function renderManagementTable() {
+                const tbody = document.getElementById('managementTableBody');
+                if (!matches.length) {
+                    tbody.innerHTML =
+                        `<tr><td colspan="8" class="empty-state"><i class="fas fa-inbox"></i> Belum ada pertandingan.</td></tr>`;
+                    return;
+                }
+                let html = '';
+                const sorted = [...matches].sort((a, b) => new Date(a.schedule) - new Date(b.schedule));
+                sorted.forEach(m => {
+                    const statusText = m.status === 'selesai' ? 'Selesai' : 'Dijadwalkan';
+                    const statusCls = m.status === 'selesai' ? 'selesai' : 'dijadwalkan';
+                    const jadwalDisplay = m.schedule ? new Date(m.schedule).toLocaleString('id-ID', { day: 'numeric',
+                        month: 'short', hour: '2-digit', minute: '2-digit' }) : '—';
+                    const resultDisplay = m.result || '—';
+                    const locationDisplay = m.location || '—';
+                    const roundDisplay = m.round || '—';
+                    html += `<tr>
+                <td>${m.sport || '—'}</td>
+                <td>${getMatchDisplay(m)}</td>
+                <td>${roundDisplay}</td>
+                <td>${locationDisplay}</td>
+                <td>${jadwalDisplay}</td>
+                <td>${resultDisplay}</td>
+                <td><span class="status-badge ${statusCls}">${statusText}</span></td>
+                <td style="text-align:center;"><button class="hapus-btn" data-id="${m.id}"><i class="fas fa-trash-can"></i></button></td>
+              </tr>`;
+                });
+                tbody.innerHTML = html;
+                document.querySelectorAll('#managementTableBody .hapus-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = Number(this.dataset.id);
+                        showModal('Hapus Pertandingan', 'Yakin ingin menghapus pertandingan ini?', function() {
+                            matches = matches.filter(m => m.id !== id);
+                            saveData();
+                            renderAll();
+                            showToast('🗑️ Pertandingan dihapus');
+                        });
+                    });
+                });
+            }
+
+            function renderSelectOptions() {
+                const sportSelect = document.getElementById('inputSport');
+                const currentSport = sportSelect.value;
+                sportSelect.innerHTML = '<option value="">— pilih cabang —</option>';
+                sports.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s;
+                    opt.textContent = s;
+                    sportSelect.appendChild(opt);
+                });
+                if ([...sportSelect.options].some(o => o.value === currentSport)) sportSelect.value = currentSport;
+
+                const homeSelect = document.getElementById('inputDeptHome');
+                const currentHome = homeSelect.value;
+                homeSelect.innerHTML = '<option value="">— pilih departemen —</option>';
+                depts.forEach(d => {
+                    const opt = document.createElement('option');
+                    opt.value = d;
+                    opt.textContent = d;
+                    homeSelect.appendChild(opt);
+                });
+                if ([...homeSelect.options].some(o => o.value === currentHome)) homeSelect.value = currentHome;
+
+                const awaySelect = document.getElementById('inputDeptAway');
+                const currentAway = awaySelect.value;
+                awaySelect.innerHTML = '<option value="">— pilih departemen —</option>';
+                depts.forEach(d => {
+                    const opt = document.createElement('option');
+                    opt.value = d;
+                    opt.textContent = d;
+                    awaySelect.appendChild(opt);
+                });
+                if ([...awaySelect.options].some(o => o.value === currentAway)) awaySelect.value = currentAway;
+
+                const roundSelect = document.getElementById('inputRound');
+                const currentRound = roundSelect.value;
+                roundSelect.innerHTML = '<option value="">— pilih babak —</option>';
+                rounds.forEach(r => {
+                    const opt = document.createElement('option');
+                    opt.value = r;
+                    opt.textContent = r;
+                    roundSelect.appendChild(opt);
+                });
+                if ([...roundSelect.options].some(o => o.value === currentRound)) roundSelect.value = currentRound;
+
+                const locationSelect = document.getElementById('inputLocation');
+                const currentLocation = locationSelect.value;
+                locationSelect.innerHTML = '<option value="">— pilih lokasi —</option>';
+                locations.forEach(l => {
+                    const opt = document.createElement('option');
+                    opt.value = l;
+                    opt.textContent = l;
+                    locationSelect.appendChild(opt);
+                });
+                if ([...locationSelect.options].some(o => o.value === currentLocation)) locationSelect.value = currentLocation;
+
+                const resultSelect = document.getElementById('selectMatchForResult');
+                const currentResultVal = resultSelect.value;
+                resultSelect.innerHTML = '<option value="">— pilih pertandingan —</option>';
+                const available = matches.filter(m => m.status !== 'selesai');
+                available.forEach(m => {
+                    const opt = document.createElement('option');
+                    opt.value = m.id;
+                    const label =
+                        `${m.sport || '?'} - ${m.home||'?'} VS ${m.away||'?'} (${m.schedule ? new Date(m.schedule).toLocaleDateString('id-ID') : '?'})`;
+                    opt.textContent = label;
+                    resultSelect.appendChild(opt);
+                });
+                if ([...resultSelect.options].some(o => o.value == currentResultVal)) resultSelect.value =
+                currentResultVal;
+
+                document.getElementById('selectMatchForResult').addEventListener('change', function() {
+                    const id = Number(this.value);
+                    const match = matches.find(m => m.id === id);
+                    const preview = document.getElementById('matchPreview');
+                    const labelHome = document.getElementById('labelHome');
+                    const labelAway = document.getElementById('labelAway');
+                    const previewHome = document.getElementById('previewHome');
+                    const previewAway = document.getElementById('previewAway');
+                    const previewRound = document.getElementById('previewRound');
+                    const previewLocation = document.getElementById('previewLocation');
+                    const inputHome = document.getElementById('inputScoreHome');
+                    const inputAway = document.getElementById('inputScoreAway');
+
+                    if (match) {
+                        preview.style.display = 'block';
+                        previewHome.textContent = match.home;
+                        previewAway.textContent = match.away;
+                        previewRound.textContent = match.round || 'Tidak ada babak';
+                        previewLocation.textContent = match.location || 'Tidak ada lokasi';
+                        labelHome.textContent = match.home;
+                        labelAway.textContent = match.away;
+                        inputHome.value = match.scoreHome || '';
+                        inputAway.value = match.scoreAway || '';
+                    } else {
+                        preview.style.display = 'none';
+                        labelHome.textContent = 'Home';
+                        labelAway.textContent = 'Away';
+                        inputHome.value = '';
+                        inputAway.value = '';
+                    }
+                });
+
+                const event = new Event('change');
+                resultSelect.dispatchEvent(event);
+            }
+
+            function renderSportList() {
+                const container = document.getElementById('sportList');
+                if (!sports.length) { container.innerHTML = '<span style="color:#8ba0b9;">Belum ada cabang.</span>'; return; }
+                container.innerHTML = sports.map(s =>
+                    `<div class="list-item">
+                <span class="item-name"><i class="fas fa-futbol" style="color:#1e6f9f;"></i>${s}</span>
+                <button class="hapus-btn" data-type="sport" data-value="${s}"><i class="fas fa-times"></i></button>
+              </div>`
+                ).join('');
+                container.querySelectorAll('.hapus-btn[data-type="sport"]').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const val = this.dataset.value;
+                        showModal('Hapus Cabang', `Yakin ingin menghapus cabang "${val}"?`, function() {
+                            sports = sports.filter(s => s !== val);
+                            matches = matches.filter(m => m.sport !== val);
+                            saveData();
+                            renderAll();
+                            showToast(`🗑️ Cabang "${val}" dihapus`);
+                        });
+                    });
+                });
+            }
+
+            function renderDeptList() {
+                const container = document.getElementById('deptList');
+                if (!depts.length) { container.innerHTML = '<span style="color:#8ba0b9;">Belum ada departemen.</span>'; return; }
+                container.innerHTML = depts.map(d =>
+                    `<div class="list-item">
+                <span class="item-name"><i class="fas fa-building" style="color:#1e6f9f;"></i>${d}</span>
+                <button class="hapus-btn" data-type="dept" data-value="${d}"><i class="fas fa-times"></i></button>
+              </div>`
+                ).join('');
+                container.querySelectorAll('.hapus-btn[data-type="dept"]').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const val = this.dataset.value;
+                        showModal('Hapus Departemen', `Yakin ingin menghapus departemen "${val}"?`, function() {
+                            depts = depts.filter(d => d !== val);
+                            matches = matches.filter(m => m.home !== val && m.away !== val);
+                            saveData();
+                            renderAll();
+                            showToast(`🗑️ Departemen "${val}" dihapus`);
+                        });
+                    });
+                });
+            }
+
+            function renderRoundList() {
+                const container = document.getElementById('roundList');
+                if (!rounds.length) { container.innerHTML = '<span style="color:#8ba0b9;">Belum ada babak.</span>'; return; }
+                container.innerHTML = rounds.map(r =>
+                    `<div class="list-item">
+                <span class="item-name"><i class="fas fa-trophy" style="color:#1e6f9f;"></i>${r}</span>
+                <button class="hapus-btn" data-type="round" data-value="${r}"><i class="fas fa-times"></i></button>
+              </div>`
+                ).join('');
+                container.querySelectorAll('.hapus-btn[data-type="round"]').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const val = this.dataset.value;
+                        showModal('Hapus Babak', `Yakin ingin menghapus babak "${val}"?`, function() {
+                            rounds = rounds.filter(r => r !== val);
+                            matches = matches.filter(m => m.round !== val);
+                            saveData();
+                            renderAll();
+                            showToast(`🗑️ Babak "${val}" dihapus`);
+                        });
+                    });
+                });
+            }
+
+            function renderLocationList() {
+                const container = document.getElementById('locationList');
+                if (!locations.length) { container.innerHTML = '<span style="color:#8ba0b9;">Belum ada lokasi.</span>'; return; }
+                container.innerHTML = locations.map(l =>
+                    `<div class="list-item">
+                <span class="item-name"><i class="fas fa-map-pin" style="color:#1e6f9f;"></i>${l}</span>
+                <button class="hapus-btn" data-type="location" data-value="${l}"><i class="fas fa-times"></i></button>
+              </div>`
+                ).join('');
+                container.querySelectorAll('.hapus-btn[data-type="location"]').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const val = this.dataset.value;
+                        showModal('Hapus Lokasi', `Yakin ingin menghapus lokasi "${val}"?`, function() {
+                            locations = locations.filter(l => l !== val);
+                            matches = matches.filter(m => m.location !== val);
+                            saveData();
+                            renderAll();
+                            showToast(`🗑️ Lokasi "${val}" dihapus`);
+                        });
+                    });
+                });
+            }
+
+            function updateStats() {
+                const total = matches.length;
+                document.getElementById('totalMatchDash').textContent = `Total: ${total}`;
+            }
+
+            // ========== NAVIGASI ==========
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    document.getElementById(this.dataset.tab).classList.add('active');
+                });
+            });
+
+            // ========== TAMBAH PERTANDINGAN ==========
+            document.getElementById('btnTambahMatch').addEventListener('click', function() {
+                const schedule = document.getElementById('inputSchedule').value;
+                const sport = document.getElementById('inputSport').value;
+                const round = document.getElementById('inputRound').value;
+                const location = document.getElementById('inputLocation').value;
+                const home = document.getElementById('inputDeptHome').value;
+                const away = document.getElementById('inputDeptAway').value;
+
+                if (!schedule || !sport || !round || !location || !home || !away) {
+                    showToast('⚠️ Harap lengkapi semua field!');
+                    return;
+                }
+                if (home === away) {
+                    showToast('⚠️ Tim tuan rumah dan tamu tidak boleh sama!');
+                    return;
+                }
+                const newMatch = {
+                    id: Date.now() + Math.floor(Math.random() * 1000),
+                    sport,
+                    home,
+                    away,
+                    round,
+                    location,
+                    schedule,
+                    result: '',
+                    scoreHome: '',
+                    scoreAway: '',
+                    status: 'dijadwalkan'
+                };
+                matches.push(newMatch);
+                saveData();
+                renderAll();
+                document.getElementById('inputSchedule').value = '';
+                showToast('✅ Pertandingan ditambahkan!');
+            });
+
+            // ========== UPDATE HASIL ==========
+            document.getElementById('btnUpdateHasil').addEventListener('click', function() {
+                const select = document.getElementById('selectMatchForResult');
+                const scoreHome = document.getElementById('inputScoreHome').value.trim();
+                const scoreAway = document.getElementById('inputScoreAway').value.trim();
+                const id = Number(select.value);
+
+                if (!id) { showToast('⚠️ Pilih pertandingan!'); return; }
+                if (scoreHome === '' || scoreAway === '') {
+                    showToast('⚠️ Masukkan skor untuk kedua tim!');
+                    return;
+                }
+                const h = parseInt(scoreHome);
+                const a = parseInt(scoreAway);
+                if (isNaN(h) || isNaN(a) || h < 0 || a < 0) {
+                    showToast('⚠️ Masukkan angka yang valid!');
+                    return;
+                }
+
+                const match = matches.find(m => m.id === id);
+                if (!match) { showToast('⚠️ Data tidak ditemukan.'); return; }
+
+                match.scoreHome = scoreHome;
+                match.scoreAway = scoreAway;
+                match.result = `${scoreHome}-${scoreAway}`;
+                match.status = 'selesai';
+
+                saveData();
+                renderAll();
+                showToast('✅ Hasil diperbarui!');
+            });
+
+            // ========== RESET HASIL ==========
+            document.getElementById('btnResetResult').addEventListener('click', function() {
+                const select = document.getElementById('selectMatchForResult');
+                const id = Number(select.value);
+                if (!id) { showToast('⚠️ Pilih pertandingan!'); return; }
+                const match = matches.find(m => m.id === id);
+                if (!match) { showToast('⚠️ Data tidak ditemukan.'); return; }
+                if (match.status === 'dijadwalkan') {
+                    showToast('ℹ️ Pertandingan belum memiliki hasil.');
+                    return;
+                }
+                showModal('Reset Hasil', `Yakin ingin mereset hasil pertandingan ${match.home} VS ${match.away}?`, function() {
+                    match.scoreHome = '';
+                    match.scoreAway = '';
+                    match.result = '';
+                    match.status = 'dijadwalkan';
+                    saveData();
+                    renderAll();
+                    document.getElementById('inputScoreHome').value = '';
+                    document.getElementById('inputScoreAway').value = '';
+                    const event = new Event('change');
+                    document.getElementById('selectMatchForResult').dispatchEvent(event);
+                    showToast('🔄 Hasil direset');
+                });
+            });
+
+            // ========== TAMBAH SPORT / DEPT / ROUND / LOCATION ==========
+            document.getElementById('btnAddSport').addEventListener('click', function() {
+                const inp = document.getElementById('inputNewSport');
+                const val = inp.value.trim();
+                if (!val) { showToast('⚠️ Masukkan nama cabang olahraga.'); return; }
+                if (sports.includes(val)) { showToast('⚠️ Sudah ada.'); return; }
+                sports.push(val);
+                saveData();
+                renderAll();
+                inp.value = '';
+                showToast(`✅ Cabang "${val}" ditambahkan`);
+            });
+            document.getElementById('inputNewSport').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') { e.preventDefault();
+                    document.getElementById('btnAddSport').click(); }
+            });
+
+            document.getElementById('btnAddDept').addEventListener('click', function() {
+                const inp = document.getElementById('inputNewDept');
+                const val = inp.value.trim();
+                if (!val) { showToast('⚠️ Masukkan nama departemen.'); return; }
+                if (depts.includes(val)) { showToast('⚠️ Sudah ada.'); return; }
+                depts.push(val);
+                saveData();
+                renderAll();
+                inp.value = '';
+                showToast(`✅ Departemen "${val}" ditambahkan`);
+            });
+            document.getElementById('inputNewDept').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') { e.preventDefault();
+                    document.getElementById('btnAddDept').click(); }
+            });
+
+            document.getElementById('btnAddRound').addEventListener('click', function() {
+                const inp = document.getElementById('inputNewRound');
+                const val = inp.value.trim();
+                if (!val) { showToast('⚠️ Masukkan nama babak.'); return; }
+                if (rounds.includes(val)) { showToast('⚠️ Sudah ada.'); return; }
+                rounds.push(val);
+                saveData();
+                renderAll();
+                inp.value = '';
+                showToast(`✅ Babak "${val}" ditambahkan`);
+            });
+            document.getElementById('inputNewRound').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') { e.preventDefault();
+                    document.getElementById('btnAddRound').click(); }
+            });
+
+            document.getElementById('btnAddLocation').addEventListener('click', function() {
+                const inp = document.getElementById('inputNewLocation');
+                const val = inp.value.trim();
+                if (!val) { showToast('⚠️ Masukkan nama lokasi.'); return; }
+                if (locations.includes(val)) { showToast('⚠️ Sudah ada.'); return; }
+                locations.push(val);
+                saveData();
+                renderAll();
+                inp.value = '';
+                showToast(`✅ Lokasi "${val}" ditambahkan`);
+            });
+            document.getElementById('inputNewLocation').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') { e.preventDefault();
+                    document.getElementById('btnAddLocation').click(); }
+            });
+
+            // ========== RESET ==========
+            document.getElementById('resetAllData').addEventListener('click', function() {
+                showModal('Reset Data', 'Yakin ingin mereset semua data ke default?', function() {
+                    resetDefault();
+                    saveData();
+                    renderAll();
+                    showToast('🔄 Data direset ke default');
+                });
+            });
+
+            // ========== INIT ==========
+            loadData();
+        })();
+    </script>
+</body>
+</html>
